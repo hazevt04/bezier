@@ -1,15 +1,18 @@
-cmake_minimum_required( VERSION 2.8.9 )
+cmake_minimum_required( VERSION 3.1.0 )
 
-project( bezier )
+project( bezier_curve )
 
 include_directories( $CMAKE_SOURCE_DIR )
 
 add_definitions(-std=c++11 )
 
+set(EXEC_NAME "bezier_curve")
+
 set(SRCS
    #"ImageData.cpp"
    #"BresenhamLineDrawer.cpp"
    #"PNGRenderer.cpp"
+   "BezierCurve.cpp"
    "main.cpp"
 )
 
@@ -19,7 +22,7 @@ if(DEBUG_MACRO)
    add_definitions(-DDEBUG)
 endif()
 
-add_executable( bezier "${SRCS}" )
+add_executable( "${EXEC_NAME}" "${SRCS}" )
 
-target_link_libraries( bezier png z )
+target_link_libraries( "${EXEC_NAME}" png z )
 
