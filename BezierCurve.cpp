@@ -34,7 +34,7 @@ BezierCurve::BezierCurve( int order, Point* control_points,
    
    this->control_points = control_points;
    this->num_curve_points = num_curve_points + 2;
-   this->num_lines = num_curve_points;
+   this->num_lines = num_curve_points + 2;
    cout << __func__ << "(): num lines is " << this->num_lines << endl;
    this->lines = new Line[num_lines];
 }
@@ -61,37 +61,31 @@ void BezierCurve::generateCurve( ) {
       point_index++;
    }
 
-   /*
    int num_lines = this->num_lines;
    Point prev_end_point;
    
    this->lines[0].set_start_point( curve_points[0] );
-   cout << "After this->lines[0].set_start_point( curve_points[0] )" << endl;
    this->lines[0].set_end_point( curve_points[1] );
-   cout << "After this->lines[0].set_end_point( curve_points[1] )" << endl;
    
    // Copy the end point to be the next start point
    ulong end_x = curve_points[1].get_x( );
    ulong end_y = curve_points[1].get_y( );
    prev_end_point.set_x_y( end_x, end_y );
-
+   
    for ( int line_index = 1; line_index < num_lines; line_index++ ) {
       this->lines[line_index].set_start_point( prev_end_point );
       this->lines[line_index].set_end_point( curve_points[line_index+1] );
 
-      cout << __func__ << "(): line " << line_index << " is " 
-         << this->lines[line_index].get_display_str( ) << endl;
+      cout << __func__ << "(): line " << line_index << " is ";
+      this->lines[line_index].display( ); 
+      cout << endl;
       
       // Copy the end point to be the next start point
       ulong end_x = curve_points[line_index+1].get_x( );
       ulong end_y = curve_points[line_index+1].get_y( );
       prev_end_point.set_x_y( end_x, end_y );
 
-      cout << __func__ << "(): index " << line_index 
-         << ": prev_end_point is " << prev_end_point.get_display_str( ) 
-         << endl;
    }
-   */
 }
 
 
@@ -200,10 +194,13 @@ Point BezierCurve::third_order_calc( double t_val ) {
       t_cubed * y_weights[3];
 
    Point result( x_result, y_result );
-   //DEBUG_PRINTF( "%s(): result point is %s\n", result.get_display_str() );
+   //DEBUG_PRINTF( "%s(): result point is " );
+   //DEBUG_FUNC( result.display() );
+   //DEBUG_PRINTF( "\n" );
    
-   cout << __func__ << "(): result point is " << result.get_display_str()
-      << endl;
+   cout << __func__ << "(): result point is ";
+   result.display();
+   cout << endl;
    return result;
 }
 
