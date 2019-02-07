@@ -3,6 +3,7 @@
 #include <ctime>
 
 #include "util.h"
+#include "Point.h"
 #include "BezierCurve.h"
 
 using std::cout;
@@ -12,28 +13,20 @@ using std::time_t;
 int main( int argc, char* argv[] ) {
    double result;
 
-   int x_values[] = { 120, 35, 220, 220 };
-   int y_values[] = { 160, 200, 260, 40 };
+   int order = 3;
+   Point* control_points = new Point[(order+1)];
+   
+   control_points[0].set_x_y( 120, 160 );
+   control_points[1].set_x_y( 35, 200 );
+   control_points[2].set_x_y( 220, 260 );
+   control_points[3].set_x_y( 220, 40 );
 
-   double x_results[ 201 ];
-   double y_results[ 201 ];
-
-   BezierCurve* bezier = new BezierCurve(); 
+   BezierCurve* bezier_curve = new BezierCurve( order, control_points, 201 ); 
    
    clock_t start_time = clock();
-   int scaled_index = 0;
-   for ( double t_index = 0.0; t_index <= 1.005; t_index += 0.005 ) {
-      x_results[ scaled_index ] = bezier->third_order_calc( t_index, x_values );
-      
-      DEBUG_PRINTF( "bezier_order_3( %12.6f, x ) is %12.6f\n",
-           t_index, x_results[ scaled_index ] ); 
-      y_results[ scaled_index ] = bezier->third_order_calc( t_index, y_values );
-      DEBUG_PRINTF( "bezier_order_3( %12.6f, y ) is %12.6f\n",
-           t_index, y_results[ scaled_index ] ); 
-      scaled_index++;
-   }
-   DEBUG_PRINTF( "\n" );
 
+   bezier_curve->generateCurve( );
+   
    double duration = (double)( clock() - start_time )/
       (double)( CLOCKS_PER_SEC );
    
@@ -41,6 +34,5 @@ int main( int argc, char* argv[] ) {
       << " seconds." << endl;
    cout << endl;
 
-   delete bezier;
    return 0;
 }
