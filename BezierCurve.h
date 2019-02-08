@@ -11,10 +11,11 @@ class BezierCurve {
       BezierCurve( ); 
       ~BezierCurve( ); 
       
-      BezierCurve( int order, Point* control_points, int num_curve_points );
-      void generateCurve( );
+      BezierCurve( int order, Point* control_points, int num_curve_points, 
+            ulong color );
+      void generate_curve( );
 
-      Line* getLines( ) { return this->lines; }
+      Line* get_lines( ) { return this->lines; }
       int get_num_curve_points( ) { return this->num_curve_points; }
       int get_num_lines( ) { return this->num_lines; }
    private:
@@ -30,6 +31,7 @@ class BezierCurve {
       int num_lines;
       Point* control_points;
       Line* lines;
+      ulong color;
 };
 
 

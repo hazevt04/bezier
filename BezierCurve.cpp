@@ -11,8 +11,6 @@ using std::vector;
 using std::cout;
 using std::endl;
 
-typedef vector<vector<int>> VoV;
-
 BezierCurve::BezierCurve( ) {
    control_points = nullptr;
    lines = nullptr;
@@ -28,7 +26,7 @@ BezierCurve::~BezierCurve( ) {
 }
 
 BezierCurve::BezierCurve( int order, Point* control_points, 
-      int num_curve_points = 200 ) {
+      int num_curve_points = 200, ulong color = Util::BLACK ) {
    
    this->order = order;
    
@@ -40,7 +38,7 @@ BezierCurve::BezierCurve( int order, Point* control_points,
 }
 
 // Third order curve
-void BezierCurve::generateCurve( ) {
+void BezierCurve::generate_curve( ) {
    int num_curve_points = this->num_curve_points;
    double increment = 1.0/(double)num_curve_points;
    cout << __func__ << "(): increment is " << increment << endl;
@@ -162,6 +160,7 @@ Point BezierCurve::third_order_calc( double t_val ) {
    double mt = 1- t_val;
    double mt_squared = mt * mt;
    double mt_cubed = mt_squared * mt;
+
    DEBUG_PRINTF( "%s(): t = %12.6f\n", __func__, t_val );
    DEBUG_PRINTF( "%s(): t^2 = %12.6f\n", __func__, t_squared );
    DEBUG_PRINTF( "%s(): t^3 = %12.6f\n", __func__, t_cubed );
