@@ -30,7 +30,7 @@ int main( int argc, char* argv[] ) {
    ulong color = Util::BLACK;
 
    BezierCurve* bezier_curve = new BezierCurve( order, control_points, 
-      201, color  ); 
+      1001, color  ); 
    
    clock_t start_time = clock();
    bezier_curve->generate_curve( );
