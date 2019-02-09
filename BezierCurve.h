@@ -18,20 +18,21 @@ class BezierCurve {
       Line* get_lines( ) { return this->lines; }
       int get_num_curve_points( ) { return this->num_curve_points; }
       int get_num_lines( ) { return this->num_lines; }
+      
+      Point calc( double t_val );
    private:
-      int binomial( int n_val, int k_val );
-      double n_order_calc( int num, double t_val, int weights[] );
-      double second_order_calc( double t_val, int weights[] );
-      double third_order_calc( double t_val, int weights[] );
-      
+      Point second_order_calc( double t_val );
       Point third_order_calc( double t_val );
+      Point n_order_calc( double t_val );
       
+      int binomial( int n_val, int k_val );
+      
+      Line* lines;
+      Point* control_points;
+      ulong color;
       int order;
       int num_curve_points;
       int num_lines;
-      Point* control_points;
-      Line* lines;
-      ulong color;
 };
 
 

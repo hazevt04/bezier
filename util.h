@@ -3,11 +3,11 @@
 
 #ifdef DEBUG
 #  define DEBUG_PRINTF(args...) printf( args );
-#  define DEBUG_FUNC_CALL( func ) func;
+#  define DEBUG_FUNC( func ) func;
 #else
    // Don't print anything
 #  define DEBUG_PRINTF(args...) 
-#  define DEBUG_FUNC_CALL( func )
+#  define DEBUG_FUNC( func )
 #endif
 
 #include <vector>

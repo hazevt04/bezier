@@ -168,7 +168,7 @@ void BresenhamLineDrawer::draw( Line* line ) {
    DEBUG_PRINTF( "%s(): End Point is (x1: %lu, y1: %lu)\n", __func__, x1, y1 );
    Line* reversed_line = new Line( &end_point, &start_point, color );
    DEBUG_PRINTF( "%s(): Reversed line display\n", __func__ );
-   DEBUG_FUNC_CALL( reversed_line->display() );
+   DEBUG_FUNC( reversed_line->display() );
 
    if ( ( y1 == y0 ) && ( x1 != x0 ) ) {
       draw_horizontal( line );

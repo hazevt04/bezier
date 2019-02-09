@@ -20,25 +20,35 @@ int main( int argc, char* argv[] ) {
    double result;
 
    int order = 3;
-   Point* control_points = new Point[(order+1)];
+   int num_control_points = order + 1;
+   Point* control_points = new Point[num_control_points];
    
    control_points[0].set_x_y( 120, 160 );
    control_points[1].set_x_y( 35, 200 );
    control_points[2].set_x_y( 220, 260 );
    control_points[3].set_x_y( 220, 40 );
    
-   ulong color = Util::BLACK;
+   ulong curve_color = Util::BLACK;
 
+   int num_curve_points = 1001;
    BezierCurve* bezier_curve = new BezierCurve( order, control_points, 
-      1001, color  ); 
+      num_curve_points, curve_color  ); 
    
+   cout << "Generating Bezier curve of order " << order << "." << endl;
+   cout << "There are " << num_control_points << " control points." << endl;
+   for ( int point_index = 0; point_index < num_control_points; point_index++ ) {
+      cout << "Control Point " << point_index << ": "; 
+      control_points[point_index].display( );
+      cout << endl;
+   }
+   cout << endl;
+
    clock_t start_time = clock();
    bezier_curve->generate_curve( );
    double gen_curve_duration = (double)( clock() - start_time )/
       (double)( CLOCKS_PER_SEC );
    cout << "Bezier Curve Generation duration was " << gen_curve_duration 
       << " seconds." << endl;
-   cout << endl;
 
    Line* bezier_lines = bezier_curve->get_lines( );
    int num_lines = bezier_curve->get_num_lines( );
@@ -61,24 +71,21 @@ int main( int argc, char* argv[] ) {
       (double)( CLOCKS_PER_SEC );
    cout << "Bezier Curve Draw duration was " << draw_curve_duration 
       << " seconds." << endl;
-   cout << endl;
    
    PNGRenderer* renderer = new PNGRenderer( image_data );
    start_time = clock();
    renderer->render( );
 
-
    double render_curve_duration = (double)( clock() - start_time )/
       (double)( CLOCKS_PER_SEC );
    cout << "Bezier Curve Render duration was " << render_curve_duration 
       << " seconds." << endl;
-   cout << endl;
    
    double overall_duration = gen_curve_duration + draw_curve_duration + 
       render_curve_duration;
    cout << "Overall duration was " << overall_duration 
       << " seconds." << endl;
-   cout << endl;
 
+   cout << "Output curve is in " << filename << endl;
    return 0;
 }

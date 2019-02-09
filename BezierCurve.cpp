@@ -33,7 +33,8 @@ BezierCurve::BezierCurve( int order, Point* control_points,
    this->control_points = control_points;
    this->num_curve_points = num_curve_points + 2;
    this->num_lines = num_curve_points + 2;
-   cout << __func__ << "(): num lines is " << this->num_lines << endl;
+   
+   DEBUG_PRINTF( "%s(): num_lines is %d\n", __func__, this->num_lines );
    this->lines = new Line[num_lines];
 }
 
@@ -41,21 +42,20 @@ BezierCurve::BezierCurve( int order, Point* control_points,
 void BezierCurve::generate_curve( ) {
    int num_curve_points = this->num_curve_points;
    double increment = 1.0/(double)num_curve_points;
-   cout << __func__ << "(): increment is " << increment << endl;
-
-   cout << __func__ << "(): t_index check- iterating from 0.0 to 1.000." 
-      << endl;
-   cout << __func__ << "(): There are " << ( 1.000/increment ) << " points."
-      << endl;
-   cout << __func__ << "(): num_curve_points is " << num_curve_points << endl;
+   
+   DEBUG_PRINTF( "%s(): t_index increment is %12.3f\n", __func__, increment );
+   DEBUG_PRINTF( "%s(): t_index will iterate from 0.0 to 1.000.\n" );
+   DEBUG_PRINTF( "%s(): There will be %f points.\n", 
+         __func__, ( 1.000/increment ) );
+   DEBUG_PRINTF( "%s(): The curve will have %d points\n", 
+         __func__, num_curve_points );
 
    Point curve_points[num_curve_points]; 
    int point_index = 0;
 
    for ( double t_index = 0.0; t_index <= 1.000; t_index += increment ) {
-      cout << "t_index is " << t_index << endl;
-      cout << "Point index is " << point_index << endl;
-      curve_points[point_index] = third_order_calc( t_index );
+      DEBUG_PRINTF( "Point index %d: %12.3f\n", point_index, t_index );
+      curve_points[point_index] = calc( t_index );
       point_index++;
    }
 
@@ -74,16 +74,16 @@ void BezierCurve::generate_curve( ) {
       this->lines[line_index].set_start_point( prev_end_point );
       this->lines[line_index].set_end_point( curve_points[line_index+1] );
 
-      cout << __func__ << "(): line " << line_index << " is ";
-      this->lines[line_index].display( ); 
-      cout << endl;
+      DEBUG_PRINTF( "%s(): Line %d is ", __func__, line_index );
+      DEBUG_FUNC( this->lines[line_index].display( ) ); 
+      DEBUG_PRINTF( "\n" );
       
       // Copy the end point to be the next start point
       ulong end_x = curve_points[line_index+1].get_x( );
       ulong end_y = curve_points[line_index+1].get_y( );
       prev_end_point.set_x_y( end_x, end_y );
 
-   }
+   } // end of for ( int line_index = 1; line_index < num_lines; line_index++ )
 }
 
 
@@ -104,51 +104,48 @@ int BezierCurve::binomial( int n_val, int k_val ) {
    return lut[n_val][k_val];
 }
 
-double BezierCurve::n_order_calc( int num, double t_val, int weights[] ) {
-   double sum = 0.0;
-   for ( int index = 0; index < num; index++ ) {
-      sum += weights[index] * binomial(num,index) * 
-         (pow((double)(1-t_val),(double)(num-index))) * 
-         (pow(t_val,(double)index));
 
-      DEBUG_PRINTF( "%s(): %d, %d: sum is %12.6f\n", __func__, num, index, sum );
-   }
-   return sum;
-}
-
-double BezierCurve::second_order_calc( double t_val, int weights[] ) {
+Point BezierCurve::second_order_calc( double t_val ) {
+   ulong x_result;
+   ulong y_result;
+   
    double t_squared = t_val * t_val;
    double mt = 1 - t_val;
    double mt_squared = mt * mt;
+   
    DEBUG_PRINTF( "%s(): t = %12.6f\n", __func__, t_val );
    DEBUG_PRINTF( "%s(): t^2 = %12.6f\n", __func__, t_squared );
    DEBUG_PRINTF( "%s(): 1 - t = %12.6f\n", __func__, mt );
    DEBUG_PRINTF( "%s(): (1 - t)^2 = %12.6f\n", __func__, mt_squared );
-   DEBUG_PRINTF( "%s(): weights: { %d, %d, %d }\n", __func__,
-         weights[0], weights[1], weights[2] );
-   return mt_squared * weights[0] + 
-      ( 2 * mt * t_val ) * weights[1] + 
-      t_squared * weights[2];
-}
 
-double BezierCurve::third_order_calc( double t_val, int weights[] ) {
-   double t_squared = t_val * t_val;
-   double t_cubed = t_squared * t_val;
-   double mt = 1- t_val;
-   double mt_squared = mt * mt;
-   double mt_cubed = mt_squared * mt;
-   DEBUG_PRINTF( "%s(): t = %12.6f\n", __func__, t_val );
-   DEBUG_PRINTF( "%s(): t^2 = %12.6f\n", __func__, t_squared );
-   DEBUG_PRINTF( "%s(): t^3 = %12.6f\n", __func__, t_cubed );
-   DEBUG_PRINTF( "%s(): 1 - t = %12.6f\n", __func__, mt );
-   DEBUG_PRINTF( "%s(): (1 - t)^2 = %12.6f\n", __func__, mt_squared );
-   DEBUG_PRINTF( "%s(): (1 - t)^3 = %12.6f\n", __func__, mt_cubed );
-   DEBUG_PRINTF( "%s(): weights: { %d, %d, %d, %d }\n", __func__,
-         weights[0], weights[1], weights[2], weights[3] );
-   return mt_cubed * weights[0] + 
-      ( 2 * mt_squared * t_val ) * weights[1] + 
-      ( 3 * mt * t_squared ) * weights[2] + 
-      t_cubed * weights[3];
+   ulong x_weights[ 3 ];
+   ulong y_weights[ 3 ];
+   
+   for ( int index = 0; index < 3; index++ ) {
+      x_weights[index] = this->control_points[index].get_x();
+      y_weights[index] = this->control_points[index].get_y();
+   }
+
+   DEBUG_PRINTF( "%s(): x_weights: { %lu, %lu, %lu }\n", __func__,
+         x_weights[0], x_weights[1], x_weights[2] );
+   
+   DEBUG_PRINTF( "%s(): y_weights: { %lu, %lu, %lu }\n", __func__,
+         y_weights[0], y_weights[1], y_weights[2] );
+
+   x_result = mt_squared * x_weights[0] + 
+      ( 2 * mt * t_val ) * x_weights[1] + 
+      t_squared * x_weights[2];
+   
+   y_result = mt_squared * y_weights[0] + 
+      ( 2 * mt * t_val ) * y_weights[1] + 
+      t_squared * y_weights[2];
+   
+   Point result( x_result, y_result );
+   
+   DEBUG_PRINTF( "%s(): result point is " );
+   DEBUG_FUNC( result.display() );
+   DEBUG_PRINTF( "\n" );
+   return result;
 }
 
 Point BezierCurve::third_order_calc( double t_val ) {
@@ -157,7 +154,7 @@ Point BezierCurve::third_order_calc( double t_val ) {
 
    double t_squared = t_val * t_val;
    double t_cubed = t_squared * t_val;
-   double mt = 1- t_val;
+   double mt = 1 - t_val;
    double mt_squared = mt * mt;
    double mt_cubed = mt_squared * mt;
 
@@ -193,15 +190,60 @@ Point BezierCurve::third_order_calc( double t_val ) {
       t_cubed * y_weights[3];
 
    Point result( x_result, y_result );
-   //DEBUG_PRINTF( "%s(): result point is " );
-   //DEBUG_FUNC( result.display() );
-   //DEBUG_PRINTF( "\n" );
    
-   cout << __func__ << "(): result point is ";
-   result.display();
-   cout << endl;
+   DEBUG_PRINTF( "%s(): result point is " );
+   DEBUG_FUNC( result.display() );
+   DEBUG_PRINTF( "\n" );
    return result;
 }
 
+Point BezierCurve::n_order_calc( double t_val ) {
+   ulong x_result;
+   ulong y_result;
 
+   int order = this->order;
+   int num_weights = this->order + 1;
+
+   ulong x_weights[ num_weights ];
+   ulong y_weights[ num_weights ];
+   
+   for ( int index = 0; index < num_weights; index++ ) {
+      x_weights[index] = this->control_points[index].get_x();
+      y_weights[index] = this->control_points[index].get_y();
+   }
+
+   for ( int index = 0; index < order; index++ ) {
+      int binomial_term = binomial(order,index);
+      double first_poly_term = pow((double)(1-t_val),(double)(order-index));
+      double second_poly_term = pow(t_val,(double)index);
+
+      x_result += x_weights[index] * binomial_term * first_poly_term 
+         * second_poly_term;
+      y_result += y_weights[index] * binomial_term * first_poly_term 
+         * second_poly_term;
+
+      DEBUG_PRINTF( "%s(): order %d: %d: x_sum is %ld\n", 
+            __func__, order, index, x_sum );
+      DEBUG_PRINTF( "%s(): order %d: %d: y_sum is %ld\n", 
+            __func__, order, index, y_sum );
+   }
+   DEBUG_PRINTF( "\n" );
+
+   Point result( x_result, y_result );
+   DEBUG_PRINTF( "%s(): result point is " );
+   DEBUG_FUNC( result.display() );
+   DEBUG_PRINTF( "\n" );
+   return result;
+}
+
+Point BezierCurve::calc( double t_val ) {
+   int order = this->order;
+   if ( order == 2 ) {
+      return second_order_calc( t_val );
+   } else if ( order == 3 ) {
+      return third_order_calc( t_val );
+   } else {
+      return n_order_calc( t_val );
+   }
+}
 
