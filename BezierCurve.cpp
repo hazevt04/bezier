@@ -31,8 +31,8 @@ BezierCurve::BezierCurve( int order, Point* control_points,
    this->order = order;
    
    this->control_points = control_points;
-   this->num_curve_points = num_curve_points + 2;
-   this->num_lines = num_curve_points + 2;
+   this->num_curve_points = num_curve_points + 1;
+   this->num_lines = num_curve_points;
    
    DEBUG_PRINTF( "%s(): num_lines is %d\n", __func__, this->num_lines );
    this->lines = new Line[num_lines];
@@ -44,7 +44,7 @@ void BezierCurve::generate_curve( ) {
    double increment = 1.0/(double)num_curve_points;
    
    DEBUG_PRINTF( "%s(): t_index increment is %12.3f\n", __func__, increment );
-   DEBUG_PRINTF( "%s(): t_index will iterate from 0.0 to 1.000.\n" );
+   DEBUG_PRINTF( "%s(): t_index will iterate from 0.0 to 1.000.\n", __func__ );
    DEBUG_PRINTF( "%s(): There will be %f points.\n", 
          __func__, ( 1.000/increment ) );
    DEBUG_PRINTF( "%s(): The curve will have %d points\n", 
@@ -118,9 +118,14 @@ Point BezierCurve::second_order_calc( double t_val ) {
    DEBUG_PRINTF( "%s(): 1 - t = %12.6f\n", __func__, mt );
    DEBUG_PRINTF( "%s(): (1 - t)^2 = %12.6f\n", __func__, mt_squared );
 
+   Point result = mt_squared * control_points[0] +
+      ( 2 * mt * t_val ) * control_points[1] + 
+      t_squared * control_points[2];
+
+   /*
    ulong x_weights[ 3 ];
    ulong y_weights[ 3 ];
-   
+  
    for ( int index = 0; index < 3; index++ ) {
       x_weights[index] = this->control_points[index].get_x();
       y_weights[index] = this->control_points[index].get_y();
@@ -141,8 +146,9 @@ Point BezierCurve::second_order_calc( double t_val ) {
       t_squared * y_weights[2];
    
    Point result( x_result, y_result );
-   
-   DEBUG_PRINTF( "%s(): result point is " );
+   */
+
+   DEBUG_PRINTF( "%s(): result point is ", __func__ );
    DEBUG_FUNC( result.display() );
    DEBUG_PRINTF( "\n" );
    return result;
@@ -164,7 +170,12 @@ Point BezierCurve::third_order_calc( double t_val ) {
    DEBUG_PRINTF( "%s(): 1 - t = %12.6f\n", __func__, mt );
    DEBUG_PRINTF( "%s(): (1 - t)^2 = %12.6f\n", __func__, mt_squared );
    DEBUG_PRINTF( "%s(): (1 - t)^3 = %12.6f\n", __func__, mt_cubed );
-   
+  
+   Point result = mt_cubed * control_points[0] + 
+      ( 2 * mt_squared * t_val ) * control_points[1] + 
+      ( 3 * mt * t_squared ) * control_points[2] + 
+      t_cubed * control_points[3];
+   /* 
    ulong x_weights[ 4 ];
    ulong y_weights[ 4 ];
    
@@ -190,8 +201,9 @@ Point BezierCurve::third_order_calc( double t_val ) {
       t_cubed * y_weights[3];
 
    Point result( x_result, y_result );
-   
-   DEBUG_PRINTF( "%s(): result point is " );
+   */
+
+   DEBUG_PRINTF( "%s(): result point is ", __func__ );
    DEBUG_FUNC( result.display() );
    DEBUG_PRINTF( "\n" );
    return result;
@@ -200,10 +212,21 @@ Point BezierCurve::third_order_calc( double t_val ) {
 Point BezierCurve::n_order_calc( double t_val ) {
    ulong x_result;
    ulong y_result;
+   Point result;
 
    int order = this->order;
    int num_weights = this->order + 1;
 
+   for ( int index = 0; index < order; index++ ) {
+      int binomial_term = binomial(order,index);
+      double first_poly_term = pow((double)(1-t_val),(double)(order-index));
+      double second_poly_term = pow(t_val,(double)index);
+      
+      result = result + control_points[index] * binomial_term 
+         * first_poly_term * second_poly_term;
+   }
+
+   /*
    ulong x_weights[ num_weights ];
    ulong y_weights[ num_weights ];
    
@@ -223,14 +246,16 @@ Point BezierCurve::n_order_calc( double t_val ) {
          * second_poly_term;
 
       DEBUG_PRINTF( "%s(): order %d: %d: x_sum is %ld\n", 
-            __func__, order, index, x_sum );
+            __func__, order, index, x_result );
       DEBUG_PRINTF( "%s(): order %d: %d: y_sum is %ld\n", 
-            __func__, order, index, y_sum );
+            __func__, order, index, y_result );
    }
    DEBUG_PRINTF( "\n" );
 
    Point result( x_result, y_result );
-   DEBUG_PRINTF( "%s(): result point is " );
+   */
+
+   DEBUG_PRINTF( "%s(): result point is ", __func__ );
    DEBUG_FUNC( result.display() );
    DEBUG_PRINTF( "\n" );
    return result;

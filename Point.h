@@ -2,8 +2,8 @@
 #define _POINT_H_
 
 #include <iostream>
-#include <sstream>
 #include <string>
+
 
 #include "util.h"
 
@@ -26,9 +26,77 @@ class Point {
       }
       ulong get_x( ) { return this->x; }
       ulong get_y( ) { return this->y; }
-      void operator = ( const Point& other ) {
-         x = other.x;
-         y = other.y;
+      Point& operator=( const Point& other ) {
+         if ( this != &other ) {
+            this->x = other.x;
+            this->y = other.y;
+         }
+         return *this;
+      }
+      bool operator==( const Point& other ) {
+         if ( this != &other ) {
+            return ( ( other.x == this->x ) && ( other.y == this->y ) );
+         } else {
+            return true;
+         }
+      }
+      friend Point operator*( const double val, const Point& point ) {
+         Point product;
+         product.x = point.x * val;
+         product.y = point.y * val;
+         return product;
+      }
+      friend Point operator*( const Point& point, const double val ) {
+         Point product;
+         product.x = point.x * val;
+         product.y = point.y * val;
+         return product;
+      }
+      friend Point operator*( const int val, const Point& point ) {
+         Point product;
+         product.x = point.x * val;
+         product.y = point.y * val;
+         return product;
+      }
+      friend Point operator*( const Point& point, const int val ) {
+         Point product;
+         product.x = point.x * val;
+         product.y = point.y * val;
+         return product;
+      }
+      friend Point operator+( const double val, const Point& point ) {
+         Point sum;
+         sum.x = point.x + val;
+         sum.y = point.y + val;
+         return sum;
+      }
+      friend Point operator+( const Point& point, const double val ) {
+         Point sum;
+         sum.x = point.x + val;
+         sum.y = point.y + val;
+         return sum;
+      }
+      friend Point operator+( const int val, const Point& point ) {
+         Point sum;
+         sum.x = point.x + val;
+         sum.y = point.y + val;
+         return sum;
+      }
+      friend Point operator+( const Point& point, const int val ) {
+         Point sum;
+         sum.x = point.x + val;
+         sum.y = point.y + val;
+         return sum;
+      }
+      friend Point operator+( const Point& point1, const Point& point2 ) {
+         Point sum;
+         sum.x = point1.x + point2.x;
+         sum.y = point1.y + point2.y;
+         return sum;
+      }
+      friend std::ostream& operator<<( std::ostream& os, const Point& point ) {
+         os << "(" << point.x << ", " << point.y << ")";
+         return os;
       }
       void display( ) {
          std::cout << "(" << x << ", " << y << ")";

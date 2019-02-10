@@ -44,7 +44,7 @@ ImageData::ImageData( ulong width, ulong height,
    
    if ( this->pixels ) {
       for ( ulong index = 0; index < num_pixels; index++ ) {
-         this->pixels[ index ] = background_color;
+         pixels[ index ] = background_color;
       }
    }
 }
@@ -55,7 +55,7 @@ ImageData::~ImageData() {
    }
 }
 
-void ImageData::Setpixel( ulong index, ulong val ) {
+void ImageData::set_pixel( ulong index, ulong val ) {
    if ( index < this->num_pixels ) {
       if ( this->pixels ) {
          pixels[ index ] = val;
@@ -63,8 +63,8 @@ void ImageData::Setpixel( ulong index, ulong val ) {
    }
 }
 
-void ImageData::Setpixel( ulong x, ulong y, ulong val ) {
-   if ( ( x <= this->width )  && ( y <= this->height ) ) {
+void ImageData::set_pixel( ulong x, ulong y, ulong val ) {
+   if ( ( x < this->width )  && ( y < this->height ) ) {
       if ( this->pixels ) {
          pixels[ ( y * this->width ) + x ] = val;
       }

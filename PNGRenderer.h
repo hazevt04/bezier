@@ -19,14 +19,13 @@ class PNGRenderer : public Renderer {
       ~PNGRenderer( );
       void render(); 
       void set_rgb( png_byte* ptr, ulong val );
-      int write_png( char* filename, int width, 
-            int height, ulong* buffer, char* title );
+      int write_png( char* title );
    private:
-      ImageData* image_data;
-      FILE* fp;
       png_structp png_ptr;
       png_infop info_ptr;
       png_bytep row;
+      ImageData* image_data;
+      FILE* fp;
             
 };
 
