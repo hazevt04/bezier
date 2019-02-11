@@ -30,7 +30,7 @@ int main( int argc, char* argv[] ) {
    
    ulong curve_color = Util::BLACK;
 
-   int num_curve_points = 2001;
+   int num_curve_points = 2000;
    BezierCurve* bezier_curve = new BezierCurve( order, control_points, 
       num_curve_points, curve_color  ); 
    

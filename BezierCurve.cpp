@@ -106,8 +106,7 @@ int BezierCurve::binomial( int n_val, int k_val ) {
 
 
 Point BezierCurve::second_order_calc( double t_val ) {
-   ulong x_result;
-   ulong y_result;
+   Point result;
    
    double t_squared = t_val * t_val;
    double mt = 1 - t_val;
@@ -118,35 +117,9 @@ Point BezierCurve::second_order_calc( double t_val ) {
    DEBUG_PRINTF( "%s(): 1 - t = %12.6f\n", __func__, mt );
    DEBUG_PRINTF( "%s(): (1 - t)^2 = %12.6f\n", __func__, mt_squared );
 
-   Point result = mt_squared * control_points[0] +
+   result = mt_squared * control_points[0] +
       ( 2 * mt * t_val ) * control_points[1] + 
       t_squared * control_points[2];
-
-   /*
-   ulong x_weights[ 3 ];
-   ulong y_weights[ 3 ];
-  
-   for ( int index = 0; index < 3; index++ ) {
-      x_weights[index] = this->control_points[index].get_x();
-      y_weights[index] = this->control_points[index].get_y();
-   }
-
-   DEBUG_PRINTF( "%s(): x_weights: { %lu, %lu, %lu }\n", __func__,
-         x_weights[0], x_weights[1], x_weights[2] );
-   
-   DEBUG_PRINTF( "%s(): y_weights: { %lu, %lu, %lu }\n", __func__,
-         y_weights[0], y_weights[1], y_weights[2] );
-
-   x_result = mt_squared * x_weights[0] + 
-      ( 2 * mt * t_val ) * x_weights[1] + 
-      t_squared * x_weights[2];
-   
-   y_result = mt_squared * y_weights[0] + 
-      ( 2 * mt * t_val ) * y_weights[1] + 
-      t_squared * y_weights[2];
-   
-   Point result( x_result, y_result );
-   */
 
    DEBUG_PRINTF( "%s(): result point is ", __func__ );
    DEBUG_FUNC( result.display() );
@@ -155,9 +128,8 @@ Point BezierCurve::second_order_calc( double t_val ) {
 }
 
 Point BezierCurve::third_order_calc( double t_val ) {
-   ulong x_result;
-   ulong y_result;
-
+   Point result;
+   
    double t_squared = t_val * t_val;
    double t_cubed = t_squared * t_val;
    double mt = 1 - t_val;
@@ -171,37 +143,10 @@ Point BezierCurve::third_order_calc( double t_val ) {
    DEBUG_PRINTF( "%s(): (1 - t)^2 = %12.6f\n", __func__, mt_squared );
    DEBUG_PRINTF( "%s(): (1 - t)^3 = %12.6f\n", __func__, mt_cubed );
   
-   Point result = mt_cubed * control_points[0] + 
+   result = mt_cubed * control_points[0] + 
       ( 2 * mt_squared * t_val ) * control_points[1] + 
       ( 3 * mt * t_squared ) * control_points[2] + 
       t_cubed * control_points[3];
-   /* 
-   ulong x_weights[ 4 ];
-   ulong y_weights[ 4 ];
-   
-   for ( int index = 0; index < 4; index++ ) {
-      x_weights[index] = this->control_points[index].get_x();
-      y_weights[index] = this->control_points[index].get_y();
-   }
-
-   DEBUG_PRINTF( "%s(): x_weights: { %lu, %lu, %lu, %lu }\n", __func__,
-         x_weights[0], x_weights[1], x_weights[2], x_weights[3] );
-   
-   DEBUG_PRINTF( "%s(): y_weights: { %lu, %lu, %lu, %lu }\n", __func__,
-         y_weights[0], y_weights[1], y_weights[2], y_weights[3] );
-   
-   x_result = mt_cubed * x_weights[0] + 
-      ( 2 * mt_squared * t_val ) * x_weights[1] + 
-      ( 3 * mt * t_squared ) * x_weights[2] + 
-      t_cubed * x_weights[3];
-   
-   y_result = mt_cubed * y_weights[0] + 
-      ( 2 * mt_squared * t_val ) * y_weights[1] + 
-      ( 3 * mt * t_squared ) * y_weights[2] + 
-      t_cubed * y_weights[3];
-
-   Point result( x_result, y_result );
-   */
 
    DEBUG_PRINTF( "%s(): result point is ", __func__ );
    DEBUG_FUNC( result.display() );
@@ -210,8 +155,6 @@ Point BezierCurve::third_order_calc( double t_val ) {
 }
 
 Point BezierCurve::n_order_calc( double t_val ) {
-   ulong x_result;
-   ulong y_result;
    Point result;
 
    int order = this->order;
@@ -225,35 +168,6 @@ Point BezierCurve::n_order_calc( double t_val ) {
       result = result + control_points[index] * binomial_term 
          * first_poly_term * second_poly_term;
    }
-
-   /*
-   ulong x_weights[ num_weights ];
-   ulong y_weights[ num_weights ];
-   
-   for ( int index = 0; index < num_weights; index++ ) {
-      x_weights[index] = this->control_points[index].get_x();
-      y_weights[index] = this->control_points[index].get_y();
-   }
-
-   for ( int index = 0; index < order; index++ ) {
-      int binomial_term = binomial(order,index);
-      double first_poly_term = pow((double)(1-t_val),(double)(order-index));
-      double second_poly_term = pow(t_val,(double)index);
-
-      x_result += x_weights[index] * binomial_term * first_poly_term 
-         * second_poly_term;
-      y_result += y_weights[index] * binomial_term * first_poly_term 
-         * second_poly_term;
-
-      DEBUG_PRINTF( "%s(): order %d: %d: x_sum is %ld\n", 
-            __func__, order, index, x_result );
-      DEBUG_PRINTF( "%s(): order %d: %d: y_sum is %ld\n", 
-            __func__, order, index, y_result );
-   }
-   DEBUG_PRINTF( "\n" );
-
-   Point result( x_result, y_result );
-   */
 
    DEBUG_PRINTF( "%s(): result point is ", __func__ );
    DEBUG_FUNC( result.display() );
