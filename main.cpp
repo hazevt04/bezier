@@ -30,16 +30,15 @@ int main( int argc, char* argv[] ) {
    
    ulong curve_color = Util::BLACK;
 
-   int num_curve_points = 1001;
+   int num_curve_points = 2000;
    BezierCurve* bezier_curve = new BezierCurve( order, control_points, 
       num_curve_points, curve_color  ); 
    
    cout << "Generating Bezier curve of order " << order << "." << endl;
    cout << "There are " << num_control_points << " control points." << endl;
    for ( int point_index = 0; point_index < num_control_points; point_index++ ) {
-      cout << "Control Point " << point_index << ": "; 
-      control_points[point_index].display( );
-      cout << endl;
+      cout << "Control Point " << point_index << ": " 
+         << control_points[point_index] << endl;
    }
    cout << endl;
 
@@ -73,14 +72,15 @@ int main( int argc, char* argv[] ) {
       << " seconds." << endl;
    
    PNGRenderer* renderer = new PNGRenderer( image_data );
+
    start_time = clock();
    renderer->render( );
-
    double render_curve_duration = (double)( clock() - start_time )/
       (double)( CLOCKS_PER_SEC );
    cout << "Bezier Curve Render duration was " << render_curve_duration 
       << " seconds." << endl;
    
+
    double overall_duration = gen_curve_duration + draw_curve_duration + 
       render_curve_duration;
    cout << "Overall duration was " << overall_duration 

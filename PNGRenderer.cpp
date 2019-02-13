@@ -28,10 +28,23 @@ void PNGRenderer::set_rgb( png_byte* ptr, ulong val ) {
 }
 
 
-int PNGRenderer::write_png( char* filename, int width, 
-      int height, ulong* buffer, char* title ) {
+int PNGRenderer::write_png( char* title = NULL ) {
 
    int code            = 0;
+
+   ImageData* image_data = this->image_data;
+  
+   if ( !image_data ) {
+      fprintf( stderr, "%s(): ERROR: image_data is NULL!\n", __func__ );
+      return 1;
+   }
+   std::string t_filename = image_data->get_filename( );
+   char filename[100];
+   strcpy( filename, t_filename.c_str( ) );
+
+   int width = ( int )image_data->get_width( );
+   int height = ( int )image_data->get_height( );
+   ulong* buffer = image_data->get_pixels( );
 
    // Open file for writing (binary mode)
    fp = fopen( filename, "wb" );
@@ -63,13 +76,13 @@ int PNGRenderer::write_png( char* filename, int width,
 
    png_init_io( png_ptr, fp );
 
-   // Write header (8 bit colour depth)
+   // Write header (8 bit color depth)
    png_set_IHDR( png_ptr, info_ptr, width, height, 8, 
          PNG_COLOR_TYPE_RGB, PNG_INTERLACE_NONE, 
          PNG_COMPRESSION_TYPE_BASE,
          PNG_FILTER_TYPE_BASE );
 
-      // Set title
+   // Set title
    if ( title != NULL ) {
       png_text title_text;
       title_text.compression = PNG_TEXT_COMPRESSION_NONE;
@@ -101,9 +114,6 @@ int PNGRenderer::write_png( char* filename, int width,
 
 
 PNGRenderer::~PNGRenderer() {
-   //if ( fp != NULL )
-      //if 
-      //fclose( fp );
    if ( info_ptr != NULL )
       png_free_data( png_ptr, info_ptr, PNG_FREE_ALL, -1 );
    if ( png_ptr != NULL )
@@ -115,14 +125,14 @@ PNGRenderer::~PNGRenderer() {
 
 void PNGRenderer::render() {
    ImageData* image_data = this->image_data;
-   ulong* pixels = image_data->Getpixels( );
-   int width = (int)image_data->Getwidth( );
-   int height = (int)image_data->Getheight( );
-   std::string filename = image_data->Getfilename( );
+   ulong* pixels = image_data->get_pixels( );
+   int width = (int)image_data->get_width( );
+   int height = (int)image_data->get_height( );
+   std::string filename = image_data->get_filename( );
    char fname[100];
    strcpy( fname, filename.c_str() );
    
-   int result = write_png( fname, width, height, pixels, fname ); 
+   int result = write_png( fname ); 
    if ( result ) {
       fprintf( stderr, 
             "Exiting due to error in rendering PNG file." );

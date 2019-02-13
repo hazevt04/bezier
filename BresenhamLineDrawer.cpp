@@ -16,7 +16,7 @@ void BresenhamLineDrawer::draw_vertical( Line* line ) {
    ulong y0 = start_point.get_y( );
 
    for ( ulong index = y0; index < y1; index++ ) {
-      this->image_data->Setpixel( x0, index, color );
+      this->image_data->set_pixel( x0, index, color );
       DEBUG_PRINTF( "%s(): Index %lu: x is %lu\n", __func__, index, x0 );
    }
 }
@@ -31,7 +31,7 @@ void BresenhamLineDrawer::draw_horizontal( Line* line ) {
    ulong y0 = start_point.get_y( );
 
    for ( ulong index = x0; index < x1; index++ ) {
-      this->image_data->Setpixel( index, y0, color );
+      this->image_data->set_pixel( index, y0, color );
       DEBUG_PRINTF( "%s(): Index %lu: x is %lu\n", __func__, index, y0 );
    }
 }
@@ -71,7 +71,7 @@ void BresenhamLineDrawer::draw_gradual( Line* line ) {
    ulong y = y0;
 
    for ( ulong index = x0; index <= x1; index++ ) {
-      this->image_data->Setpixel( index, y, color );
+      this->image_data->set_pixel( index, y, color );
       DEBUG_PRINTF( "%s(): Index %lu: y is %lu\n", __func__, index, y );
 
       // TODO: Get rid of branch
@@ -133,7 +133,7 @@ void BresenhamLineDrawer::draw_steep( Line* line ) {
    DEBUG_PRINTF( "%s(): x is %lu\n", __func__, x );
 
    for ( ulong index = y0; index <= y1; index++ ) {
-      this->image_data->Setpixel( x, index, color );
+      this->image_data->set_pixel( x, index, color );
       DEBUG_PRINTF( "%s(): Index %lu: x is %lu\n", __func__, index, x );
 
       // TODO: Get rid of branch
