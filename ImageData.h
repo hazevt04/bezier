@@ -10,10 +10,11 @@ class ImageData {
             ulong background_color );
       ImageData( ulong width, ulong height, std::string filename, 
             ulong background_color );
-      ~ImageData();
+      ~ImageData( );
       
       void set_pixel( ulong idx, ulong val );
       void set_pixel( ulong x, ulong y, ulong val );
+      void set_pixel( Point point, ulong val );
       void set_pixels( ulong* pixels ) { this->pixels = pixels; }
 
       void set_width( ulong width ) { this->width = width; }

@@ -63,6 +63,16 @@ void ImageData::set_pixel( ulong index, ulong val ) {
    }
 }
 
+void ImageData::set_pixel( Point point, ulong val ) {
+   ulong x = point.get_x( );
+   ulong y = point.get_y( );
+   if ( ( x < this->width )  && ( y < this->height ) ) {
+      if ( this->pixels ) {
+         pixels[ ( y * this->width ) + x ] = val;
+      }
+   }
+}
+
 void ImageData::set_pixel( ulong x, ulong y, ulong val ) {
    if ( ( x < this->width )  && ( y < this->height ) ) {
       if ( this->pixels ) {

@@ -11,19 +11,24 @@ using std::vector;
 using std::cout;
 using std::endl;
 
+
 BezierCurve::BezierCurve( ) {
-   control_points = nullptr;
-   lines = nullptr;
+   this->control_points = nullptr;
+   this->lines = nullptr;
 }
 
+
 BezierCurve::~BezierCurve( ) {
-   if ( lines ) {
-      delete lines;
+   if ( this->lines ) {
+      delete this->lines;
+      this->lines = nullptr;
    }
-   if ( control_points ) {
-      delete control_points;
+   if ( this->control_points ) {
+      delete this->control_points;
+      this->control_points = nullptr;
    }
 }
+
 
 BezierCurve::BezierCurve( int order, Point* control_points, 
       int num_curve_points = 200, ulong color = Util::BLACK ) {
@@ -38,7 +43,46 @@ BezierCurve::BezierCurve( int order, Point* control_points,
    this->lines = new Line[num_lines];
 }
 
-// Third order curve
+
+void BezierCurve::draw_curve( int num_points, Point points[], 
+      double t_val, ImageData* image_data, ulong color ) {
+
+   if ( num_points == 1 ) {
+      image_data->set_pixel(curve_points[0]);
+   } else {
+      new_num_points = num_points - 1;
+      Point new_points[ new_num_points ];
+      for( int index = 0; index < new_num_points; index++ ) {
+         new_points[ index ] = ( 1 - t_val ) * points[ index ] +
+            t_val * points[ index + 1 ];
+      }
+     draw_curve( new_num_points, new_points, t_val ); 
+   } 
+}
+
+
+void BezierCurve::generate_curve( ) {
+   int num_curve_points = this->num_curve_points;
+   double increment = 1.0/(double)num_curve_points;
+   
+   DEBUG_PRINTF( "%s(): t_index increment is %12.3f\n", __func__, increment );
+   DEBUG_PRINTF( "%s(): t_index will iterate from 0.0 to 1.000.\n", __func__ );
+   DEBUG_PRINTF( "%s(): There will be %f points.\n", 
+         __func__, ( 1.000/increment ) );
+   DEBUG_PRINTF( "%s(): The curve will have %d points\n", 
+         __func__, num_curve_points );
+
+   Point curve_points[num_curve_points]; 
+   int point_index = 0;
+
+   for ( double t_index = 0.0; t_index <= 1.000; t_index += increment ) {
+      DEBUG_PRINTF( "Point index %d: %12.3f\n", point_index, t_index );
+      curve_points[point_index] = calc( t_index );
+      point_index++;
+   }
+}
+
+/*
 void BezierCurve::generate_curve( ) {
    int num_curve_points = this->num_curve_points;
    double increment = 1.0/(double)num_curve_points;
@@ -85,6 +129,7 @@ void BezierCurve::generate_curve( ) {
 
    } // end of for ( int line_index = 1; line_index < num_lines; line_index++ )
 }
+*/
 
 
 int BezierCurve::binomial( int n_val, int k_val ) {
@@ -127,6 +172,7 @@ Point BezierCurve::second_order_calc( double t_val ) {
    return result;
 }
 
+
 Point BezierCurve::third_order_calc( double t_val ) {
    Point result;
    
@@ -154,6 +200,7 @@ Point BezierCurve::third_order_calc( double t_val ) {
    return result;
 }
 
+
 Point BezierCurve::n_order_calc( double t_val ) {
    Point result;
 
@@ -174,6 +221,7 @@ Point BezierCurve::n_order_calc( double t_val ) {
    DEBUG_PRINTF( "\n" );
    return result;
 }
+
 
 Point BezierCurve::calc( double t_val ) {
    int order = this->order;
