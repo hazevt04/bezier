@@ -37,6 +37,7 @@ class Line {
       void  set_end_point( Point end_point ) {
          this->end_point = end_point;
       }
+      void  set_color( ulong color ) { this->color = color; }
       friend ostream& operator<<( ostream& os, const Line& line ) {
          os << "Line is from " << line.start_point << " to " 
             << line.end_point << endl;

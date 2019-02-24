@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <vector>
-#include "util.h"
+#include "Util.h"
 #include "BezierCurve.h"
 
 using std::vector;
@@ -26,6 +26,19 @@ BezierCurve::~BezierCurve( ) {
 }
 
 BezierCurve::BezierCurve( int order, Point* control_points, 
+      int num_curve_points = 200, ulong color = Util::BLACK ) {
+   
+   this->order = order;
+   
+   this->control_points = control_points;
+   this->num_curve_points = num_curve_points + 1;
+   this->num_lines = num_curve_points;
+   
+   DEBUG_PRINTF( "%s(): num_lines is %d\n", __func__, this->num_lines );
+   this->lines = new Line[num_lines];
+}
+
+void BezierCurve::set_properties( int order, Point* control_points, 
       int num_curve_points = 200, ulong color = Util::BLACK ) {
    
    this->order = order;
@@ -64,6 +77,10 @@ void BezierCurve::generate_curve( ) {
    
    this->lines[0].set_start_point( curve_points[0] );
    this->lines[0].set_end_point( curve_points[1] );
+
+   DEBUG_PRINTF( "%s(): Line 0 is ", __func__ );
+   DEBUG_FUNC( this->lines[0].display( ) ); 
+   DEBUG_PRINTF( "\n" );
    
    // Copy the end point to be the next start point
    ulong end_x = curve_points[1].get_x( );
@@ -156,17 +173,32 @@ Point BezierCurve::third_order_calc( double t_val ) {
 
 Point BezierCurve::n_order_calc( double t_val ) {
    Point result;
+   result.set_x_y( 0, 0 );
 
    int order = this->order;
    int num_weights = this->order + 1;
 
    for ( int index = 0; index < order; index++ ) {
       int binomial_term = binomial(order,index);
+      DEBUG_PRINTF( "%s(): index: %d binomial term is %d\n", __func__, 
+         index, binomial_term );
       double first_poly_term = pow((double)(1-t_val),(double)(order-index));
+      DEBUG_PRINTF( "%s(): index: %d first_poly_term is %12.3f\n", __func__, 
+         index, first_poly_term );
       double second_poly_term = pow(t_val,(double)index);
-      
+      DEBUG_PRINTF( "%s(): index %d second_poly_term is %12.3f\n", __func__, 
+         index, second_poly_term );
+      DEBUG_PRINTF( "%s(): index %d control_point is ", __func__, 
+         index );
+      DEBUG_FUNC( control_points[index].display() );
+      DEBUG_PRINTF( "\n" ); 
+
       result = result + control_points[index] * binomial_term 
          * first_poly_term * second_poly_term;
+
+      DEBUG_PRINTF( "%s(): index %d result point is ", __func__, index );
+      DEBUG_FUNC( result.display() );
+      DEBUG_PRINTF( "\n" );
    }
 
    DEBUG_PRINTF( "%s(): result point is ", __func__ );

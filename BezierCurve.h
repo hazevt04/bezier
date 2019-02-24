@@ -15,6 +15,10 @@ class BezierCurve {
             ulong color );
       void generate_curve( );
 
+      
+      void set_properties( int order, Point* control_points, int num_curve_points, 
+            ulong color ); 
+      
       Line* get_lines( ) { return this->lines; }
       int get_num_curve_points( ) { return this->num_curve_points; }
       int get_num_lines( ) { return this->num_lines; }

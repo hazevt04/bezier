@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <cmath>
 
-#include "util.h"
+#include "Util.h"
 #include "Line.h"
 #include "ImageData.h"
 #include "BresenhamLineDrawer.h"

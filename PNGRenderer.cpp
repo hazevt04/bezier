@@ -3,7 +3,7 @@
 #include <string.h>
 #include <stdio.h>
 
-#include "util.h"
+#include "Util.h"
 #include "png.h"
 #include "ImageData.h"
 #include "PNGRenderer.h"

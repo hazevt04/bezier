@@ -5,7 +5,7 @@
 #include <string>
 
 
-#include "util.h"
+#include "Util.h"
 
 class Point {
    public:
@@ -18,7 +18,12 @@ class Point {
       Point( ulong  x, ulong y ) { 
          this->x = x;
          this->y = y;
-
+      }
+      void set_x( ulong x ) {
+         this->x = x;
+      }
+      void set_y( ulong y ) {
+         this->y = y;
       }
       void set_x_y( ulong x, ulong y ) {
          this->x = x;

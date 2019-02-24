@@ -10,7 +10,7 @@
 #include "ImageData.h"
 #include "Renderer.h"
 
-#include "util.h"
+#include "Util.h"
 
 class PNGRenderer : public Renderer {
    public:

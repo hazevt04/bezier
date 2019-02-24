@@ -2,7 +2,7 @@
 #define _IMAGEDATA_H_
 
 #include <string>
-#include "util.h"
+#include "Util.h"
 
 class ImageData {
    public:
