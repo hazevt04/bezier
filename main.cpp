@@ -32,7 +32,7 @@ int main( int argc, char* argv[] ) {
    ulong curve_color = Util::BLACK;
    int num_curve_points = 1000;
   
-   int num_curves = 4;
+   int num_curves = 6;
    BezierCurve* bezier_curves = new BezierCurve[num_curves];
    ulong x_vals[num_control_points] = {
       120, 35, 220, 220
@@ -77,10 +77,12 @@ int main( int argc, char* argv[] ) {
 
       Line* bezier_lines = bezier_curves[curve_num].get_lines( );
       int num_lines = bezier_curves[curve_num].get_num_lines( );
+      cout << "Curve: " << curve_num << ": num_lines is " << num_lines 
+         << "." << endl;
 
       start_time = clock();
       for ( int line_num = 0; line_num < num_lines; line_num++ ) {
-         line_drawer->draw( bezier_lines );
+         line_drawer->draw( &bezier_lines[line_num] );
       }
       duration = (double)( clock() - start_time )/
          (double)( CLOCKS_PER_SEC );

@@ -29,9 +29,7 @@ void PNGRenderer::set_rgb( png_byte* ptr, ulong val ) {
 
 
 int PNGRenderer::write_png( char* title = NULL ) {
-
    int code            = 0;
-
    ImageData* image_data = this->image_data;
   
    if ( !image_data ) {
@@ -98,10 +96,19 @@ int PNGRenderer::write_png( char* title = NULL ) {
    row = ( png_bytep )malloc( 3 * width * sizeof( png_byte ) );
 
    // Write image data
+   fprintf( stdout, "%s() Total points: %d\n", __func__, ( width * height ) );
+   fprintf( stdout, "%s() Util::WHITE = %lx\n", __func__, Util::WHITE );
+   fprintf( stdout, "%s() Util::BLACK = %lx\n", __func__, Util::BLACK );
    int x, y;
    for ( y = 0; y < height; y++ ) {
+      int base_index = y * width;
       for ( x = 0; x < width; x++ ) {
-         set_rgb( &( row[ x * 3 ] ), buffer[ y * width + x ] );
+         int index = base_index + x;
+         set_rgb( &( row[ x * 3 ] ), buffer[ index ] );
+         if ( buffer[ index ] != Util::WHITE ) {
+            fprintf( stdout, "%s() buffer[%d] is %lu. x is %d. y is %d.\n",
+              __func__, index, buffer[ index ], x, y );
+         }
       }
       png_write_row( png_ptr, row );
    }

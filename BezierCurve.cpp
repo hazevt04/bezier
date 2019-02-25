@@ -29,19 +29,24 @@ BezierCurve::BezierCurve( int order, Point* control_points,
       int num_curve_points = 200, ulong color = Util::BLACK ) {
    
    this->order = order;
+   this->color = color;
    
    this->control_points = control_points;
    this->num_curve_points = num_curve_points + 1;
    this->num_lines = num_curve_points;
-   
+
    DEBUG_PRINTF( "%s(): num_lines is %d\n", __func__, this->num_lines );
    this->lines = new Line[num_lines];
+   for ( int line_num = 0; line_num < num_lines; line_num++ ) {
+      this->lines[line_num].set_color( color );
+   }
 }
 
 void BezierCurve::set_properties( int order, Point* control_points, 
       int num_curve_points = 200, ulong color = Util::BLACK ) {
    
    this->order = order;
+   this->color = color;
    
    this->control_points = control_points;
    this->num_curve_points = num_curve_points + 1;
@@ -49,6 +54,9 @@ void BezierCurve::set_properties( int order, Point* control_points,
    
    DEBUG_PRINTF( "%s(): num_lines is %d\n", __func__, this->num_lines );
    this->lines = new Line[num_lines];
+   for ( int line_num = 0; line_num < num_lines; line_num++ ) {
+      this->lines[line_num].set_color( color );
+   }
 }
 
 // Third order curve
