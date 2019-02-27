@@ -11,8 +11,6 @@
 #include "BresenhamLineDrawer.h"
 #include "PNGRenderer.h"
 
-using std::cout;
-using std::endl;
 using std::time_t;
 using std::string;
 
@@ -30,7 +28,8 @@ int main( int argc, char* argv[] ) {
    int order = 3;
    int num_control_points = order + 1;
    ulong curve_color = Util::BLACK;
-   int num_curve_points = 1000;
+   int num_curve_points = 750;
+   int num_lines = num_curve_points;
   
    int num_curves = 6;
    BezierCurve* bezier_curves = new BezierCurve[num_curves];
@@ -42,8 +41,9 @@ int main( int argc, char* argv[] ) {
    };
    Point control_points[num_curves][num_control_points];
 
-   cout << "There are " << num_control_points << " control points." << endl;
-   cout << "There are " << num_curves << " curves." << endl;
+   DEBUG_PRINTF( "There are  %d  control points.\n", num_control_points );
+   DEBUG_PRINTF( "There are  %d  curves.\n", num_curves );
+   DEBUG_PRINTF( "Each curve will have  %d  lines.\n", num_lines );
 
    clock_t start_time;
    double duration = 0.0;
@@ -58,27 +58,22 @@ int main( int argc, char* argv[] ) {
       bezier_curves[curve_num].set_properties( order, &control_points[curve_num][0], 
          num_curve_points, curve_color  ); 
       
-      cout << "Curve " << curve_num << ": Generating Bezier curve of order " 
-         << order << "." << endl;
+      DEBUG_PRINTF( "Curve %d: Generating Bezier curve of order %d.\n", curve_num, order );
       for ( int point_index = 0; point_index < num_control_points; point_index++ ) {
-         cout << "Curve " << curve_num << ": Control Point " 
-            << point_index << ": " << control_points[point_index] << endl;
+         DEBUG_PRINTF( "Curve %d: Control Point %d: " curve_num, point_index );
+         DEBUG_FUNC( control_points[curve_num][point_index].display() );
+         DEBUG_PRINTF( "\n" );
       }
-      cout << endl;
 
       start_time = clock();
       bezier_curves[curve_num].generate_curve( );
       duration = (double)( clock() - start_time )/
          (double)( CLOCKS_PER_SEC );
-      cout << "Curve: " << curve_num << ": Bezier Curve Generation duration was " 
-         << duration 
-         << " seconds." << endl;
+      DEBUG_PRINTF( "Curve %d: Bezier Curve Generation duration was %12.6f seconds.\n", 
+            curve_num, duration );
       gen_curve_duration += duration;
 
       Line* bezier_lines = bezier_curves[curve_num].get_lines( );
-      int num_lines = bezier_curves[curve_num].get_num_lines( );
-      cout << "Curve: " << curve_num << ": num_lines is " << num_lines 
-         << "." << endl;
 
       start_time = clock();
       for ( int line_num = 0; line_num < num_lines; line_num++ ) {
@@ -86,9 +81,9 @@ int main( int argc, char* argv[] ) {
       }
       duration = (double)( clock() - start_time )/
          (double)( CLOCKS_PER_SEC );
-      cout << "Curve " << curve_num <<": Bezier Curve Draw duration was " 
-         << duration 
-         << " seconds." << endl;
+      DEBUG_PRINTF( "Curve %d: Bezier Curve Draw duration was %12.6f seconds.\n\n", 
+            curve_num, duration );
+
       draw_curve_duration += duration;
 
       x_vals[1] += 20;
@@ -102,20 +97,24 @@ int main( int argc, char* argv[] ) {
 
    } // end of for ( int curve_num; curve_num < num_curves; curve_num++ ) {
    
+   printf( "Bezier Curve Generate duration was %12.6f seconds for %d curves.\n", 
+         gen_curve_duration, num_curves );
+   printf( "Bezier Curve Draw duration was %12.6f seconds for %d curves.\n", 
+         draw_curve_duration, num_curves );
+   
    PNGRenderer* renderer = new PNGRenderer( image_data );
 
    start_time = clock();
    renderer->render( );
    double render_curve_duration = (double)( clock() - start_time )/
       (double)( CLOCKS_PER_SEC );
-   cout << "Bezier Curve Render duration was " << render_curve_duration 
-      << " seconds." << endl;
+   printf( "Bezier Curve Render duration was %12.6f seconds.\n", render_curve_duration );
    
    double overall_duration = gen_curve_duration + draw_curve_duration + 
       render_curve_duration;
-   cout << "Overall duration was " << overall_duration 
-      << " seconds." << endl;
+   printf( "Overall duration was %12.6f seconds.\n", overall_duration );
 
-   cout << "Output curve is in " << filename << endl;
+   printf( "Output curve is in %s\n", filename.c_str() );
+
    return 0;
 }
