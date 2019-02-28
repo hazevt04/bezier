@@ -9,6 +9,7 @@ add_definitions(-std=c++11 )
 set(EXEC_NAME "bezier_curve")
 
 set(SRCS
+   "PNGImageData.cpp"
    "ImageData.cpp"
    "BresenhamLineDrawer.cpp"
    "PNGRenderer.cpp"

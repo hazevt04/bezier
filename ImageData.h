@@ -35,7 +35,7 @@ class ImageData {
       ulong get_background_color( ) { return background_color; }
       std::string get_filename( ) { return filename; } 
 
-   private:
+   protected:
       ulong* pixels;
       ulong width;
       ulong height;
