@@ -3,7 +3,7 @@
 
 #include "Util.h"
 #include "Line.h"
-#include "ImageData.h"
+#include "PNGImageData.h"
 #include "BresenhamLineDrawer.h"
 
 void BresenhamLineDrawer::draw_vertical( Line* line ) {
@@ -15,9 +15,10 @@ void BresenhamLineDrawer::draw_vertical( Line* line ) {
    ulong y1 = end_point.get_y( );
    ulong y0 = start_point.get_y( );
 
-   for ( ulong index = y0; index < y1; index++ ) {
-      this->image_data->set_pixel( x0, index, color );
-      DEBUG_PRINTF( "%s(): Index %lu: x is %lu\n", __func__, index, x0 );
+   for ( ulong y = y0; y < y1; y++ ) {
+      //this->image_data->set_pixel( x0, y, color );
+      this->image_data->set_png_bytes( x0, y, color );
+      DEBUG_PRINTF( "%s(): y is %lu: x0 is %lu\n", __func__, y, x0 );
    }
 }
 
@@ -30,9 +31,10 @@ void BresenhamLineDrawer::draw_horizontal( Line* line ) {
    ulong x0 = start_point.get_x( );
    ulong y0 = start_point.get_y( );
 
-   for ( ulong index = x0; index < x1; index++ ) {
-      this->image_data->set_pixel( index, y0, color );
-      DEBUG_PRINTF( "%s(): Index %lu: x is %lu\n", __func__, index, y0 );
+   for ( ulong x = x0; x < x1; x++ ) {
+      //this->image_data->set_pixel( x, y0, color );
+      this->image_data->set_png_bytes( x, y0, color );
+      DEBUG_PRINTF( "%s(): x is %lu: y0 is %lu\n", __func__, x, y0 );
    }
 }
 
@@ -70,23 +72,24 @@ void BresenhamLineDrawer::draw_gradual( Line* line ) {
    DEBUG_PRINTF( "%s(): delta_upper is %ld\n", __func__, delta_upper );
    ulong y = y0;
 
-   for ( ulong index = x0; index <= x1; index++ ) {
-      this->image_data->set_pixel( index, y, color );
-      DEBUG_PRINTF( "%s(): Index %lu: y is %lu\n", __func__, index, y );
+   for ( ulong x = x0; x <= x1; x++ ) {
+      //this->image_data->set_pixel( x, y, color );
+      this->image_data->set_png_bytes( x, y, color );
+      DEBUG_PRINTF( "%s(): x is %lu: y is %lu\n", __func__, x, y );
 
       // TODO: Get rid of branch
       if ( delta_upper > 0 ) {
          y += yi;
          delta_upper -= two_delta_x;
       
-         DEBUG_PRINTF( "%s(): Index %lu: y changed to %lu\n", __func__, index, y );
-         DEBUG_PRINTF( "%s(): Index %lu: delta_upper changed to %ld\n", __func__, 
-               index, delta_upper );
+         DEBUG_PRINTF( "%s(): x is %lu: y changed to %lu\n", __func__, x, y );
+         DEBUG_PRINTF( "%s(): x is %lu: delta_upper changed to %ld\n", __func__, 
+            x, delta_upper );
 
       }
       delta_upper += two_delta_y;
-      DEBUG_PRINTF( "%s(): Index %lu: delta_upper changed to %ld\n", __func__, 
-            index, delta_upper );
+      DEBUG_PRINTF( "%s(): x is %lu: delta_upper changed to %ld\n", __func__, 
+         x, delta_upper );
       
    } // end of for ( ulong index = x0; index < x1; index++ ) {
 }
@@ -132,25 +135,26 @@ void BresenhamLineDrawer::draw_steep( Line* line ) {
    DEBUG_PRINTF( "%s(): delta_upper is %ld\n", __func__, delta_upper );
    DEBUG_PRINTF( "%s(): x is %lu\n", __func__, x );
 
-   for ( ulong index = y0; index <= y1; index++ ) {
-      this->image_data->set_pixel( x, index, color );
-      DEBUG_PRINTF( "%s(): Index %lu: x is %lu\n", __func__, index, x );
+   for ( ulong y = y0; y <= y1; y++ ) {
+      //this->image_data->set_pixel( x, y, color );
+      this->image_data->set_png_bytes( x, y, color );
+      DEBUG_PRINTF( "%s(): y is %lu: x is %lu\n", __func__, y, x );
 
       // TODO: Get rid of branch
       if ( delta_upper > 0 ) {
          x += xi;
          delta_upper -= two_delta_y;
       
-         DEBUG_PRINTF( "%s(): Index %lu: x changed to %lu\n", __func__, index, x );
-         DEBUG_PRINTF( "%s(): Index %lu: delta_upper changed to %ld\n", __func__, 
-               index, delta_upper );
+         DEBUG_PRINTF( "%s(): y is %lu: x changed to %lu\n", __func__, y, x );
+         DEBUG_PRINTF( "%s(): y is %lu: delta_upper changed to %ld\n", __func__, 
+            y, delta_upper );
 
       }
       delta_upper += two_delta_x;
-      DEBUG_PRINTF( "%s(): Index %lu: delta_upper changed to %ld\n", __func__, 
-            index, delta_upper );
+      DEBUG_PRINTF( "%s(): y is %lu: delta_upper changed to %ld\n", __func__, 
+         y, delta_upper );
       
-   } // end of for ( ulong index = x0; index < x1; index++ ) {
+   } // end of for ( ulong y = y0; y < y1; y++ ) {
 
 }
 

@@ -20,7 +20,7 @@ int main( int argc, char* argv[] ) {
    ulong height = 600;
    string filename = "bezier.png";
    ulong background_color = Util::WHITE;
-   ImageData* image_data = new ImageData( width, height, filename, 
+   PNGImageData* image_data = new PNGImageData( width, height, filename, 
          background_color );
    BresenhamLineDrawer* line_drawer = new BresenhamLineDrawer( image_data );
 
@@ -28,10 +28,10 @@ int main( int argc, char* argv[] ) {
    int order = 3;
    int num_control_points = order + 1;
    ulong curve_color = Util::BLACK;
-   int num_curve_points = 750;
+   int num_curve_points = 500;
    int num_lines = num_curve_points;
   
-   int num_curves = 6;
+   int num_curves = 1;
    BezierCurve* bezier_curves = new BezierCurve[num_curves];
    ulong x_vals[num_control_points] = {
       120, 35, 220, 220

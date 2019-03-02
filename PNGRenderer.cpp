@@ -8,7 +8,7 @@
 #include "ImageData.h"
 #include "PNGRenderer.h"
 
-PNGRenderer::PNGRenderer( ImageData* image_data ) {
+PNGRenderer::PNGRenderer( PNGImageData* image_data ) {
    this->image_data = image_data;
    
    this->png_ptr = NULL;
@@ -22,15 +22,13 @@ PNGRenderer::PNGRenderer( ImageData* image_data ) {
 // then sets those values into the image memory buffer location pointed to by
 // 'ptr'
 void PNGRenderer::set_rgb( png_byte* ptr, ulong val ) {
-   ptr[ 0 ] = ( val >> 16 ) & 0xFFUL;
-   ptr[ 1 ] = ( val >> 8 ) & 0xFFUL;
-   ptr[ 2 ] = ( val ) & 0xFFUL;
+   memcpy( ptr, &val, 3 );
 }
 
 
 int PNGRenderer::write_png( char* title = NULL ) {
    int code            = 0;
-   ImageData* image_data = this->image_data;
+   PNGImageData* image_data = this->image_data;
   
    if ( !image_data ) {
       fprintf( stderr, "%s(): ERROR: image_data is NULL!\n", __func__ );
@@ -42,7 +40,7 @@ int PNGRenderer::write_png( char* title = NULL ) {
 
    int width = ( int )image_data->get_width( );
    int height = ( int )image_data->get_height( );
-   ulong* buffer = image_data->get_pixels( );
+   //ulong* buffer = image_data->get_pixels( );
 
    // Open file for writing (binary mode)
    fp = fopen( filename, "wb" );
@@ -92,13 +90,18 @@ int PNGRenderer::write_png( char* title = NULL ) {
 
    png_write_info( png_ptr, info_ptr );
 
-   // Allocate memory for one row (3 bytes per pixel - RGB)
-   row = ( png_bytep )malloc( 3 * width * sizeof( png_byte ) );
-
    // Write image data
    DEBUG_PRINTF( stdout, "%s() Total points: %d\n", __func__, ( width * height ) );
    DEBUG_PRINTF( stdout, "%s() Util::WHITE = %lx\n", __func__, Util::WHITE );
    DEBUG_PRINTF( stdout, "%s() Util::BLACK = %lx\n", __func__, Util::BLACK );
+   
+   png_byte** png_rows = image_data->get_png_rows();
+   png_write_image( png_ptr, png_rows );
+   
+   /*
+   // Allocate memory for one row (3 bytes per pixel - RGB)
+   row = ( png_bytep )malloc( 3 * width * sizeof( png_byte ) );
+
    int x, y;
    for ( y = 0; y < height; y++ ) {
       int base_index = y * width;
@@ -112,6 +115,7 @@ int PNGRenderer::write_png( char* title = NULL ) {
       }
       png_write_row( png_ptr, row );
    }
+   */
 
    // End write
    png_write_end( png_ptr, NULL );

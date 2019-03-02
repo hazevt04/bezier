@@ -7,7 +7,7 @@
 #include <stdio.h>
 #include <png.h>
 
-#include "ImageData.h"
+#include "PNGImageData.h"
 #include "Renderer.h"
 
 #include "Util.h"
@@ -15,7 +15,7 @@
 class PNGRenderer : public Renderer {
    public:
       PNGRenderer() { };
-      PNGRenderer( ImageData* image_data );
+      PNGRenderer( PNGImageData* image_data );
       ~PNGRenderer( );
       void render(); 
       void set_rgb( png_byte* ptr, ulong val );
@@ -24,7 +24,7 @@ class PNGRenderer : public Renderer {
       png_structp png_ptr;
       png_infop info_ptr;
       png_bytep row;
-      ImageData* image_data;
+      PNGImageData* image_data;
       FILE* fp;
             
 };

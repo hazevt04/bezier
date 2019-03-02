@@ -102,6 +102,9 @@ void BezierCurve::generate_curve( ) {
       DEBUG_PRINTF( "%s(): Line %d is ", __func__, line_index );
       DEBUG_FUNC( this->lines[line_index].display( ) ); 
       DEBUG_PRINTF( "\n" );
+
+      cout << "Line " << line_index << " is " << this->lines[line_index] 
+         << "." << endl;
       
       // Copy the end point to be the next start point
       ulong end_x = curve_points[line_index+1].get_x( );
