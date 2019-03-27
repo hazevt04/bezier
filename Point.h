@@ -38,6 +38,13 @@ class Point {
          }
          return *this;
       }
+      bool operator!=( const Point& other ) {
+         if ( this != &other ) {
+            return ( ( other.x != this->x ) || ( other.y != this->y ) );
+         } else {
+            return false;
+         }
+      }
       bool operator==( const Point& other ) {
          if ( this != &other ) {
             return ( ( other.x == this->x ) && ( other.y == this->y ) );

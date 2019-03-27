@@ -15,6 +15,16 @@ using std::time_t;
 using std::string;
 
 int main( int argc, char* argv[] ) {
+   
+   int num_curve_points;
+   if ( argc > 1 ) {
+      num_curve_points = atoi( argv[1] );
+   } else {
+      num_curve_points = 200;
+   }
+
+   std::cout << "num_curve_points set to " << num_curve_points << std::endl;
+
    // Setup image data
    ulong width = 600;
    ulong height = 600;
@@ -28,10 +38,9 @@ int main( int argc, char* argv[] ) {
    int order = 3;
    int num_control_points = order + 1;
    ulong curve_color = Util::BLACK;
-   int num_curve_points = 500;
    int num_lines = num_curve_points;
   
-   int num_curves = 1;
+   int num_curves = 8;
    BezierCurve* bezier_curves = new BezierCurve[num_curves];
    ulong x_vals[num_control_points] = {
       120, 35, 220, 220
@@ -41,8 +50,8 @@ int main( int argc, char* argv[] ) {
    };
    Point control_points[num_curves][num_control_points];
 
-   DEBUG_PRINTF( "There are  %d  control points.\n", num_control_points );
-   DEBUG_PRINTF( "There are  %d  curves.\n", num_curves );
+   DEBUG_PRINTF( "There are %d control points.\n", num_control_points );
+   DEBUG_PRINTF( "There are %d curves.\n", num_curves );
    DEBUG_PRINTF( "Each curve will have  %d  lines.\n", num_lines );
 
    clock_t start_time;
@@ -60,7 +69,7 @@ int main( int argc, char* argv[] ) {
       
       DEBUG_PRINTF( "Curve %d: Generating Bezier curve of order %d.\n", curve_num, order );
       for ( int point_index = 0; point_index < num_control_points; point_index++ ) {
-         DEBUG_PRINTF( "Curve %d: Control Point %d: " curve_num, point_index );
+         DEBUG_PRINTF( "Curve %d: Control Point %d: ", curve_num, point_index );
          DEBUG_FUNC( control_points[curve_num][point_index].display() );
          DEBUG_PRINTF( "\n" );
       }
@@ -77,7 +86,9 @@ int main( int argc, char* argv[] ) {
 
       start_time = clock();
       for ( int line_num = 0; line_num < num_lines; line_num++ ) {
-         line_drawer->draw( &bezier_lines[line_num] );
+         if ( !bezier_lines[line_num].line_is_point() ) {
+            line_drawer->draw( &bezier_lines[line_num] );
+         }
       }
       duration = (double)( clock() - start_time )/
          (double)( CLOCKS_PER_SEC );

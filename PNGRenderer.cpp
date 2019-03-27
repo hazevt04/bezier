@@ -16,7 +16,6 @@ PNGRenderer::PNGRenderer( PNGImageData* image_data ) {
    this->row = NULL;
 }
 
-
 // Let's let val be 687. MAIN COLOR is val/768
 // This takes the float value 'val', converts it to red, green & blue values,
 // then sets those values into the image memory buffer location pointed to by
@@ -91,32 +90,13 @@ int PNGRenderer::write_png( char* title = NULL ) {
    png_write_info( png_ptr, info_ptr );
 
    // Write image data
-   DEBUG_PRINTF( stdout, "%s() Total points: %d\n", __func__, ( width * height ) );
-   DEBUG_PRINTF( stdout, "%s() Util::WHITE = %lx\n", __func__, Util::WHITE );
-   DEBUG_PRINTF( stdout, "%s() Util::BLACK = %lx\n", __func__, Util::BLACK );
+   DEBUG_PRINTF( "%s() Total points: %d\n", __func__, ( width * height ) );
+   DEBUG_PRINTF( "%s() Util::WHITE = %lx\n", __func__, Util::WHITE );
+   DEBUG_PRINTF( "%s() Util::BLACK = %lx\n", __func__, Util::BLACK );
    
    png_byte** png_rows = image_data->get_png_rows();
    png_write_image( png_ptr, png_rows );
    
-   /*
-   // Allocate memory for one row (3 bytes per pixel - RGB)
-   row = ( png_bytep )malloc( 3 * width * sizeof( png_byte ) );
-
-   int x, y;
-   for ( y = 0; y < height; y++ ) {
-      int base_index = y * width;
-      for ( x = 0; x < width; x++ ) {
-         int index = base_index + x;
-         set_rgb( &( row[ x * 3 ] ), buffer[ index ] );
-         if ( buffer[ index ] != Util::WHITE ) {
-            DEBUG_PRINTF( stdout, "%s() buffer[%d] is %lu. x is %d. y is %d.\n",
-              __func__, index, buffer[ index ], x, y );
-         }
-      }
-      png_write_row( png_ptr, row );
-   }
-   */
-
    // End write
    png_write_end( png_ptr, NULL );
 

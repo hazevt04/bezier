@@ -11,6 +11,7 @@ using std::vector;
 using std::cout;
 using std::endl;
 
+
 BezierCurve::BezierCurve( ) {
    control_points = nullptr;
    lines = nullptr;
@@ -103,9 +104,6 @@ void BezierCurve::generate_curve( ) {
       DEBUG_FUNC( this->lines[line_index].display( ) ); 
       DEBUG_PRINTF( "\n" );
 
-      cout << "Line " << line_index << " is " << this->lines[line_index] 
-         << "." << endl;
-      
       // Copy the end point to be the next start point
       ulong end_x = curve_points[line_index+1].get_x( );
       ulong end_y = curve_points[line_index+1].get_y( );
