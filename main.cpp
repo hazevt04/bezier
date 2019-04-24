@@ -16,19 +16,19 @@ using std::string;
 
 int main( int argc, char* argv[] ) {
    
-   int num_curve_points;
-   if ( argc > 1 ) {
-      num_curve_points = atoi( argv[1] );
-   } else {
-      num_curve_points = 200;
-   }
-
+   int num_curves = 1;
+   int num_curve_points = 1;
+   string filename = "";
+   
+   num_curves = ( argc > 1 ) ? atoi( argv[1] ) : 1;
+   num_curve_points = ( argc > 2 ) ? atoi( argv[2] ) : 200;
+   filename = ( argc > 3 ) ? string( argv[3] ) : "bezier_curve.png";
+   
    std::cout << "num_curve_points set to " << num_curve_points << std::endl;
 
    // Setup image data
    ulong width = 600;
    ulong height = 600;
-   string filename = "bezier.png";
    ulong background_color = Util::WHITE;
    PNGImageData* image_data = new PNGImageData( width, height, filename, 
          background_color );
@@ -40,13 +40,14 @@ int main( int argc, char* argv[] ) {
    ulong curve_color = Util::BLACK;
    int num_lines = num_curve_points;
   
-   int num_curves = 8;
    BezierCurve* bezier_curves = new BezierCurve[num_curves];
    ulong x_vals[num_control_points] = {
-      120, 35, 220, 220
+      //120, 35, 220, 220
+      120, 220, 440, 330
    };
    ulong y_vals[num_control_points] = {
-      160, 200, 260, 40
+      //160, 200, 260, 40
+      120, 120, 340, 120 
    };
    Point control_points[num_curves][num_control_points];
 
@@ -67,7 +68,8 @@ int main( int argc, char* argv[] ) {
       bezier_curves[curve_num].set_properties( order, &control_points[curve_num][0], 
          num_curve_points, curve_color  ); 
       
-      DEBUG_PRINTF( "Curve %d: Generating Bezier curve of order %d.\n", curve_num, order );
+      DEBUG_PRINTF( "Curve %d: Generating Bezier curve of order %d.\n", 
+         curve_num, order );
       for ( int point_index = 0; point_index < num_control_points; point_index++ ) {
          DEBUG_PRINTF( "Curve %d: Control Point %d: ", curve_num, point_index );
          DEBUG_FUNC( control_points[curve_num][point_index].display() );
